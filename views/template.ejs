@@ -1,0 +1,50 @@
+<%-include('partials/header')%>
+<section class="lg:px-10 flex lg:flex-row flex-col px-2">
+     <form id="form_section" class="my-5 rounded border border-blue-500 lg:w-[50%] lg:p-5  p-1 w-full">
+          <div>
+               <p class="text-2xl text-center font-semibold my-5">Input details of your IT Landscape</p>
+          </div>
+     </form>
+     <section class="rounded border border-blue-500 lg:w-[50%] p-5 my-5 w-full">
+          <h1 class="text-center text-2xl font-bold my-4">Sizing Information</h1>
+          <div id="result">
+
+          </div>
+          <div id="user_inputs">
+
+          </div>
+     </section>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/main.js"></script>
+<script>
+
+// get the user_assets from the server
+
+const template_name = '<%= template_name %>';
+if(userEmail)
+{
+$.ajax({
+    type: "GET",
+    url: `/internal/get_template_data/${userEmail}/${template_name}`,
+    data: {template_name: template_name},
+    dataType: "json",
+    success: function(data){
+        template_data = data.template_data;
+        create_form(template_data);
+    },
+    failure: function(errMsg) {
+        console.log(errMsg);
+    }
+});
+
+}
+else
+{
+     window.location.href = '/internal/home';
+}
+
+
+
+
+</script>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>vuSizing Calculator</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <link rel="stylesheet" href="">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- jQuery Core (Uncompressed) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<style>
+</style>
+<body class="h-[100vh]">
+    <div id="loader" class="fixed inset-0 bg-white bg-opacity-75 flex justify-center items-center z-50">
+        <div class=" animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-blue-500"></div>
+    </div>
+    <header class="flex justify-between px-5 py-5 justify-center items-center bg-white shadow-2xl mb-2 border border-gray-100">
+        <div class="flex space-x-4 items-center">
+            <a href="https://vunetsystems.com">
+                <img src="/images/vunet_icon.svg" class="h-10 w-10">
+            </a>
+            <a href="/">
+                <h1 class="text-2xl poppins-bold ">VuSizing Calculator</h1>
+            </a>    
+        </div>
+        <nav class="flex">
+            <div class="flex" id="profile_div">
+            </div>
+        </nav>
+    </header>
+
+    <script>
+        function showToast(message) {
+            Toastify({
+                text: message, // Use the passed message
+                duration: 5000, // Duration in milliseconds
+                close: true, // Show close button
+                gravity: "top", // `top` or `bottom`
+                position: 'right', // `left`, `center`, or `right`
+                backgroundColor: "#333", // Dark background color
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                onClick: function(){} // Callback after click
+            }).showToast();
+        }
+
+        $(window).on('load', function () {
+            // Hide the loader after the page is fully loaded
+            $('#loader').fadeOut('slow');
+        });
+    
+        $(window).on('beforeunload', function () {
+            // Show the loader when the page starts unloading/loading
+            $('#loader').fadeIn('fast');
+        });
+
+                // Access email from cookies
+        const cookies = document.cookie.split(';');
+        const emailCookie = cookies.find(c => c.trim().startsWith('user_email='));
+        const nameCookie = cookies.find(c => c.trim().startsWith('user_name='));
+        const userEmail = emailCookie ? decodeURIComponent(emailCookie.split('=')[1]) : null;
+        const userName = nameCookie ? decodeURIComponent(nameCookie.split('=')[1]) : null;
+        if (userEmail) {
+            document.getElementById('profile_div').innerHTML = `
+            <div class="flex lg:space-x-5 items-center space-x-1">
+                    <h1 class="hidden lg:flex">Hello ${userName}</h1>
+                    <a href="/internal/logout">
+                        <div class="bg-red-600 text-white lg:px-5 py-2 px-1 w-full">
+                            Log&nbspout
+                        </div>
+                    </a>
+                </div>
+            `
+        }
+        else
+        {
+            document.getElementById('profile_div').innerHTML = `
+            <a href="/internal/auth/google" class="text-2xl font-bold">
+                    <div class="flex lg:space-x-4 items-center bg-white text-black px-4 py-2 rounded space-x-1">
+                        <p>Sign In with<p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" class="h-7 w-7">
+                    </div>
+                 </a>
+            `
+        }
+
+    </script>
+</body>
+</html>

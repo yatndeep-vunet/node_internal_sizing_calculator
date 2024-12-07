@@ -1,0 +1,10 @@
+1. In front page - need to take care of responsive design 
+2. In Second Page - need to take care of UI and responsive design
+
+3. Calculation Page - 
+	1. Add validation that if there is no input pop up the alert . 
+	2. If any input is putted then don't allow to close that section  
+	3. Make save inputs functional ->> Done
+	4. Save those inputs in the DB -->> Done
+	
+	
