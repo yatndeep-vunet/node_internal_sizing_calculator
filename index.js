@@ -95,7 +95,7 @@ app.get('/internal/auth/google', passport.authenticate('google', {
 }));
 
 // API to handle Google Sign-In callback
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
+app.get('/internal/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
     async (req, res) => {
         try {
             const email = req.user.emails[0].value;
@@ -244,7 +244,7 @@ app.get('/internal/delete_template/:email/:template_name', async (req, res) => {
     user_data.template_data = template_data;
     await user_data.save();
     console.log(`Template ${template_name} deleted successfully for user: ${email}`);
-    return res.redirect('/');
+    return res.status(200).json({ message: 'Template deleted successfully',status:'success'});
 })
 
 app.get('/internal/template/:template_name' , async (req,res)=>

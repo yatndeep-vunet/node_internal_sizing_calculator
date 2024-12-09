@@ -38,8 +38,8 @@
                     <tbody>
                         <% page_info.table_data.final_sizing_rows_1.forEach(function(row) { %>
                             <tr>
-                                <% row.forEach(function(item) { %>
-                                    <td class="p-2 border"><%= item %></td>
+                                <% row.forEach(function(item, index) { %>
+                                    <td class="p-2 border <%= row[0] === 'TOTAL' ? 'font-bold' : '' %>"><%= item %></td>
                                 <% }); %>
                             </tr>
                         <% }); %>
@@ -60,15 +60,14 @@
                     <tbody>
                         <% page_info.table_data.final_sizing_rows_2.forEach(function(row) { %>
                             <tr>
-                                <% row.forEach(function(item) { %>
-                                    <td class="p-2 border"><%= item %></td>
+                                <% row.forEach(function(item, index) { %>
+                                    <td class="p-2 border <%= row[0] === 'TOTAL' ? 'font-bold' : '' %>"><%= item %></td>
                                 <% }); %>
                             </tr>
                         <% }); %>
                     </tbody>
                 </table>
-            </div>
-            <button class="bg-blue-600 text-white px-5 py-2 rounded mx-[3%]" onclick="exportToExcel()">Export to Excel</button>
+            </div>     <button class="bg-blue-600 text-white px-5 py-2 rounded mx-[3%]" onclick="exportToExcel()">Export to Excel</button>
         </section>
     </div>
 
@@ -155,6 +154,12 @@
             const userInputs = document.getElementById('user_inputs');
             const userInputsSheet = XLSX.utils.table_to_sheet(userInputs);
             XLSX.utils.book_append_sheet(workbook, userInputsSheet, 'User Inputs');
+
+            // Service Level Sizing 
+            const serviceLevelSizingTable = document.getElementById('service_level_sizing_table');
+            const serviceLevelSizingSheet = XLSX.utils.table_to_sheet(serviceLevelSizingTable);
+            XLSX.utils.book_append_sheet(workbook, serviceLevelSizingSheet, 'Service Level Sizing');
+
             XLSX.writeFile(workbook, 'sizing_data.xlsx');
         }
     </script>

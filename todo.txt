@@ -1,10 +1,28 @@
-1. In front page - need to take care of responsive design 
-2. In Second Page - need to take care of UI and responsive design
+1. When the user clicks on delete, it should ask for confirmation something like "This template will be deleted" and there should be 2 options a) Ok  b)Cancel.
+Currently no confirmation is being asked, and as soon as the user clicks on delete, the template is being deleted. This becomes an issue if users click on the delete button accidentally.
 
-3. Calculation Page - 
-	1. Add validation that if there is no input pop up the alert . 
-	2. If any input is putted then don't allow to close that section  
-	3. Make save inputs functional ->> Done
-	4. Save those inputs in the DB -->> Done
-	
-	
+--> Done
+
+2. Change the text "Create or use the template" to " Create a new template or use the existing template". --> Done
+
+3. Let's have the help text that is present in the excel sheet for all the inputs. --> Pending
+
+4. Number of vuSmart users, in the excel sheet the default value is 100. Let us use the same default value. Currently 0 is present in the Number of vuSmart Users. -- Done
+
+5. Let me know the feasibility of this feedback, Currently when the user clicks on submit, he/she has to scroll up to see the output section. Is there a way to take them directly to the output section without scrolling?  --> Done
+
+
+6.  Please bold the Totals in all the output tables ---> Done
+
+7.  in the sizing on VM's output table, the right side vertical border is missing. --> Done
+
+8. Export template is missing in Service Level sizing. --> Added (Done)
+
+
+9. When the user clicks on save inputs, the loading circle at the centre of the page is present till the user clicks on ok, in the pop up displayed. It gives an impression that the saving process is still in progress. Let's  have the loading circle only during the process of saving. Once the input is saved, it should not be present.  --> Done
+
+10. When the user creates the template, the pop up "template created successfully" disappears immediately within a second.  We can either have an OK button along with the popup or let's remove the pop up. --> Done
+
+11.  Correct me if my understanding is correct for the below observation.
+When the user closes the input section for any component (vuapp360 or vulogx etc) we are not resetting the inputs to zero right?
+but we are disabling the submit button. lets enable the submit button. --> Done

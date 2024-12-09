@@ -301,44 +301,39 @@
 //   }
 
 
-function create_form(template_data)
-{
-var SAVE_INPUT_FLAG = false;
-var section_status = template_data.form_status;
-// The logic will be depending on the section status the section will be opened or closed
-const form_sections = template_data.form_inputs
-const form_section_bars = Object.keys(form_sections);
-const submit_button = document.createElement('button');
-submit_button.innerHTML = "Submit";
-submit_button.classList.add('w-full', 'px-5' ,'py-2' ,'my-4' ,'rounded' ,'btn-disabled');
-submit_button.id = 'submit';
 
-const save_inputs_button = document.createElement('button');
-save_inputs_button.innerHTML = "Save Inputs";
-save_inputs_button.classList.add('bg-blue-500', 'btn-disabled','hover:bg-blue-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded','w-full', 'my-1' , 'text-center' ,'hidden','text-center');
-save_inputs_button.id = 'save_inputs';
-for(section_bars in form_section_bars)
-{
-     const section_bar = document.createElement('div');
-     section_bar.classList.add('flex', 'flex-col', 'mb-4');
-     var section_bar_name ;
-     if(form_section_bars[section_bars] == 'vuTraces')
-     {
-          section_bar_name = 'vuApp360'
-     }
-     else if(form_section_bars[section_bars]== 'GeneralInputs')
-     {
-          section_bar_name = 'General Input'
-     }
-     else if(form_section_bars[section_bars]== 'DataRetention')
-     {
-          section_bar_name = 'Data Retention'
-     }
-     else
-     {
-          section_bar_name = form_section_bars[section_bars]
-     }
-     section_bar.innerHTML = `
+function create_form(template_data) {
+     var SAVE_INPUT_FLAG = true;
+     var section_status = template_data.form_status;
+     // The logic will be depending on the section status the section will be opened or closed
+     const form_sections = template_data.form_inputs
+     const form_section_bars = Object.keys(form_sections);
+     const submit_button = document.createElement('button');
+     submit_button.innerHTML = "Submit";
+     submit_button.classList.add('w-full', 'px-5', 'py-2', 'my-4', 'rounded', 'bg-blue-500','hover:bg-blue-700', 'text-white', 'font-bold', 'text-center');
+     submit_button.id = 'submit';
+
+     const save_inputs_button = document.createElement('button');
+     save_inputs_button.innerHTML = "Save Inputs";
+     save_inputs_button.classList.add('bg-green-500', 'hover:bg-green-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'w-full', 'my-1', 'text-center', 'text-center');
+     save_inputs_button.id = 'save_inputs';
+     for (section_bars in form_section_bars) {
+          const section_bar = document.createElement('div');
+          section_bar.classList.add('flex', 'flex-col', 'mb-4');
+          var section_bar_name;
+          if (form_section_bars[section_bars] == 'vuTraces') {
+               section_bar_name = 'vuApp360'
+          }
+          else if (form_section_bars[section_bars] == 'GeneralInputs') {
+               section_bar_name = 'General Input'
+          }
+          else if (form_section_bars[section_bars] == 'DataRetention') {
+               section_bar_name = 'Data Retention'
+          }
+          else {
+               section_bar_name = form_section_bars[section_bars]
+          }
+          section_bar.innerHTML = `
           <div class="border border-gray-200 p-2 bg-blue-600 text-white font-bold rounded cursor-pointer" id='${form_section_bars[section_bars]}_section'>
                <div class="flex justify-between items-center section-bars cursor-pointer" data-section="${form_section_bars[section_bars]}">
                    <p> ${section_bar_name} </p>
@@ -346,188 +341,201 @@ for(section_bars in form_section_bars)
                </div>
           </div>
      `
-    // section_bar.onclick = update_section_status(form_section_bars[section_bars]);
-     document.getElementById('form_section').appendChild(section_bar);
+          // section_bar.onclick = update_section_status(form_section_bars[section_bars]);
+          document.getElementById('form_section').appendChild(section_bar);
 
-     const section_body = document.createElement('fieldset');
-     section_body.classList.add('border', 'border-gray-200', 'p-2' , 'flex', 'flex-col');
-     // I need to create inputs 
-     // what will be the in input -------> input type , input name, input value ....
+          const section_body = document.createElement('fieldset');
+          section_body.classList.add('border', 'border-gray-200', 'p-2', 'flex', 'flex-col');
+          // I need to create inputs 
+          // what will be the in input -------> input type , input name, input value ....
 
-     for (section_inputs in form_sections[form_section_bars[section_bars]]) {
-          const input = document.createElement('input');
-          const label = document.createElement('label');
-          label.innerHTML = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
-          label.htmlFor = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
-          label.classList.add('block', 'text-gray-700', 'text-sm', 'font-bold', 'mb-2');
-          
-          if (form_sections[form_section_bars[section_bars]][section_inputs].data_type == "Numeric") {
-               input.type = 'number';
-               input.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'text-gray-700', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'mb-4');
-               input.value = form_sections[form_section_bars[section_bars]][section_inputs].value;
-               input.min = 0;
-          } else if (form_sections[form_section_bars[section_bars]][section_inputs].data_type == "Boolean") 
-          {
-               input.type = 'checkbox';
-               if(form_sections[form_section_bars[section_bars]][section_inputs].value == "true")
-               {
-                    input.checked = true;
-               }
-               else
-               {
-                    input.checked = false;
-               }
-          } 
-          else {
-               input.type = 'text';
-               input.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'text-gray-700', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'mb-4');
-               input.value = form_sections[form_section_bars[section_bars]][section_inputs].value;
-          }
-          
-          input.name = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
-          input.id = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
-          const inputWrapper = document.createElement('div');
-          inputWrapper.classList.add('mb-4');
-          inputWrapper.appendChild(label);
-          inputWrapper.appendChild(input);
-          
-          section_body.appendChild(inputWrapper);
-     }
+          for (section_inputs in form_sections[form_section_bars[section_bars]]) {
+               const input = document.createElement('input');
+               const label_div = document.createElement('div');
+               const label = document.createElement('label');
+               const help_text = document.createElement('p');
+               help_text.innerHTML = `
+                    <span class="tooltip">
+                    <div class="">
+                         <img src="/images/icons8-info-50.png" class="h-5 w-5">
+                    </div>
+                    <span class="tooltiptext min-w-[20vw] max-w-[50vw]"><small>
+                         ${form_sections[form_section_bars[section_bars]][section_inputs].help_text}
+                         </small></span>
+                </span>
+               `
+               label_div.classList.add('flex', 'space-x-6', 'items-center');
+               label.innerHTML = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
+               label.htmlFor = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
+               label.classList.add('block', 'text-gray-700', 'text-sm', 'font-bold', 'mb-2');
 
-     section_body.id = form_section_bars[section_bars] + "_body";
-     document.getElementById('form_section').appendChild(section_body);
-     form_section.appendChild(submit_button);
-     form_section.appendChild(save_inputs_button);
-}
-document.querySelectorAll('.section-bars').forEach(el => {
-    el.addEventListener('click', () => {
-        const section = el.dataset.section; // Store section info in a data attribute
-        section_status[section] = section_status[section] === "true" ? "false" : "true";
-        toggle_sections();
-    });
-});
-function toggle_sections()
-          {
-               for (section in section_status)
-               {
-                    if(section_status[section] == "true")
-                    {
-                         document.getElementById(section + "_body").style.display = "block";
-                         document.getElementById("arrow-" + section).classList.add('fa-caret-up');
+               if (form_sections[form_section_bars[section_bars]][section_inputs].data_type == "Numeric") {
+                    input.type = 'number';
+                    input.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'text-gray-700', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'mb-4');
+                    input.value = form_sections[form_section_bars[section_bars]][section_inputs].value;
+                    input.min = 0;
+               } else if (form_sections[form_section_bars[section_bars]][section_inputs].data_type == "Boolean") {
+                    input.type = 'checkbox';
+                    if (form_sections[form_section_bars[section_bars]][section_inputs].value == "true") {
+                         input.checked = true;
                     }
-                    else
-                    {
-                         document.getElementById(section + "_body").style.display = "none";
-                         document.getElementById("arrow-" + section).classList.remove('fa-caret-up');
+                    else {
+                         input.checked = false;
                     }
                }
-               checkSubmitButton();
+               else {
+                    input.type = 'text';
+                    input.classList.add('shadow', 'appearance-none', 'border', 'rounded', 'w-full', 'py-2', 'px-3', 'text-gray-700', 'leading-tight', 'focus:outline-none', 'focus:shadow-outline', 'mb-4');
+                    input.value = form_sections[form_section_bars[section_bars]][section_inputs].value;
+               }
+
+               input.name = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
+               input.id = form_sections[form_section_bars[section_bars]][section_inputs].form_input;
+               const inputWrapper = document.createElement('div');
+               inputWrapper.classList.add('mb-4');
+               label_div.appendChild(label);
+               label_div.appendChild(help_text);
+               inputWrapper.appendChild(label_div);
+               inputWrapper.appendChild(input);
+               section_body.appendChild(inputWrapper);
           }
-toggle_sections();
 
-
-function gatherFormData() {
-    const formValues = {};
-    const fieldsets = document.querySelectorAll('fieldset');
-    fieldsets.forEach((fieldset) => {
-        const fieldsetId = fieldset.id.replace('_body', ''); // Get the section ID
-        formValues[fieldsetId] = {};
-
-        const inputs = fieldset.querySelectorAll('input');
-        inputs.forEach((input) => {
-            if (input.type === 'checkbox') {
-                formValues[fieldsetId][input.name] = input.checked; // For checkboxes, store true/false
-            } else {
-                formValues[fieldsetId][input.name] = input.value; // For other inputs, store the value
-            }
-        });
-    });
-    const tableHTML = createTable(formValues);
-    document.getElementById('user_inputs').innerHTML = tableHTML;
-    return formValues;
-}
-
-const createTable = (data) => {
-     let table = '<table border="1" id="user_inputs" class="hidden">';
-     for (const category in data) {
-         table += `<tr><th colspan="2">${category}</th></tr>`;
-         for (const key in data[category]) {
-             table += `<tr><td>${key}</td><td>${data[category][key]}</td></tr>`;
-         }
+          section_body.id = form_section_bars[section_bars] + "_body";
+          document.getElementById('form_section').appendChild(section_body);
+          form_section.appendChild(submit_button);
+          form_section.appendChild(save_inputs_button);
      }
-     table += '</table>';
-     return table;
- };
-
-function checkSubmitButton() {
-     const button = document.getElementById("submit");
-     const save_inputs_button = document.getElementById("save_inputs");
-     //const input_check = document.querySelectorAll('#dataForm [data-error="true"]').length === 0;
-     const form_status_flag = Object.values(section_status).some(flag => flag === "true");
-     button.disabled = !form_status_flag;
-     SAVE_INPUT_FLAG = form_status_flag;
-     button.className = button.disabled
-     ? "w-full px-5 py-2 my-4 rounded btn-disabled" // Disabled state styling
-     : "w-full px-5 py-2 my-4 rounded btn-enabled"; // Enabled state styling
-
-     save_inputs_button.className = button.disabled
-     ? "bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded w-full my-1 text-center cursor-not-allowed" // Disabled state styling
-     : "bg-green-500 hover:bg-green-700 text-white  font-bold py-2 px-4 rounded w-full my-1 text-center"; // Enabled state styling
-   }
-
-
-$('#form_section').submit(function(e) {
-    $('#loader').fadeIn('fast');
-    e.preventDefault();
-    payload = {
-            form_data: gatherFormData(),
-            form_status : section_status,
-            email : userEmail ,
-            template_name : template_name
+     document.querySelectorAll('.section-bars').forEach(el => {
+          el.addEventListener('click', () => {
+               const section = el.dataset.section; // Store section info in a data attribute
+               section_status[section] = section_status[section] === "true" ? "false" : "true";
+               toggle_sections();
+          });
+     });
+     function toggle_sections() {
+          for (section in section_status) {
+               if (section_status[section] == "true") {
+                    document.getElementById(section + "_body").style.display = "block";
+                    document.getElementById("arrow-" + section).classList.add('fa-caret-up');
+               }
+               else {
+                    document.getElementById(section + "_body").style.display = "none";
+                    document.getElementById("arrow-" + section).classList.remove('fa-caret-up');
+               }
           }
-    $.ajax({
-        type: "POST",
-        url: "/internal/calculate",
-        data: payload,
-        dataType: "json",
-        success: function(data){
-           $('#result').empty();
-           $('#result').html(data.data);
-           $('#loader').fadeOut('slow');
-        },
-        failure: function(errMsg) {
-            console.log(errMsg);
-            $('#loader').fadeOut('slow');
-        }
-    });
-});
-$('#save_inputs').click(function(e) {
-    e.preventDefault();
-    if(SAVE_INPUT_FLAG)
-    {
-     $('#loader').fadeIn('fast');
-     payload = {
-          form_data: gatherFormData(),
-          form_status : section_status,
-          email : userEmail ,
-          template_name : template_name
-        }
-  $.ajax({
-      type: "POST",
-      url: "/internal/save_inputs",
-      data: payload,
-      dataType: "json",
-      success: function(data){
-           $('#loader').fadeOut('slow');
-           alert("Inputs Saved Successfully");
-      },
-      failure: function(errMsg) {
-          console.log(errMsg);
-          $('#loader').fadeOut('slow');
-          alert("Inputs not saved");
-      }
-  })
-}    })
+          // checkSubmitButton();
+     }
+     toggle_sections();
+
+
+     function gatherFormData() {
+          const formValues = {};
+          const fieldsets = document.querySelectorAll('fieldset');
+          fieldsets.forEach((fieldset) => {
+               const fieldsetId = fieldset.id.replace('_body', ''); // Get the section ID
+               formValues[fieldsetId] = {};
+
+               const inputs = fieldset.querySelectorAll('input');
+               inputs.forEach((input) => {
+                    if (input.type === 'checkbox') {
+                         formValues[fieldsetId][input.name] = input.checked; // For checkboxes, store true/false
+                    } else {
+                         formValues[fieldsetId][input.name] = input.value; // For other inputs, store the value
+                    }
+               });
+          });
+          const tableHTML = createTable(formValues);
+          document.getElementById('user_inputs').innerHTML = tableHTML;
+          return formValues;
+     }
+
+     const createTable = (data) => {
+          let table = '<table border="1" id="user_inputs" class="hidden">';
+          for (const category in data) {
+               table += `<tr><th colspan="2">${category}</th></tr>`;
+               for (const key in data[category]) {
+                    table += `<tr><td>${key}</td><td>${data[category][key]}</td></tr>`;
+               }
+          }
+          table += '</table>';
+          return table;
+     };
+
+     // function checkSubmitButton() {
+     //      const button = document.getElementById("submit");
+     //      const save_inputs_button = document.getElementById("save_inputs");
+     //      //const input_check = document.querySelectorAll('#dataForm [data-error="true"]').length === 0;
+     //      const form_status_flag = Object.values(section_status).some(flag => flag === "true");
+     //      button.disabled = !form_status_flag;
+     //      SAVE_INPUT_FLAG = form_status_flag;
+     //      button.className = button.disabled
+     //           ? "w-full px-5 py-2 my-4 rounded btn-disabled" // Disabled state styling
+     //           : "w-full px-5 py-2 my-4 rounded btn-enabled"; // Enabled state styling
+
+     //      save_inputs_button.className = button.disabled
+     //           ? "bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded w-full my-1 text-center cursor-not-allowed" // Disabled state styling
+     //           : "bg-green-500 hover:bg-green-700 text-white  font-bold py-2 px-4 rounded w-full my-1 text-center"; // Enabled state styling
+     // }
+
+
+     $('#form_section').submit(function (e) {
+          $('#loader').fadeIn('fast');
+          e.preventDefault();
+          payload = {
+               form_data: gatherFormData(),
+               form_status: section_status,
+               email: userEmail,
+               template_name: template_name
+          }
+          $.ajax({
+               type: "POST",
+               url: "/internal/calculate",
+               data: payload,
+               dataType: "json",
+               success: function (data) {
+                    $('#result').empty();
+                    $('#result').html(data.data);
+                    $('#loader').fadeOut('slow');
+                    $('html, body').animate({ scrollTop: 0 }, 'slow');
+               },
+               failure: function (errMsg) {
+                    console.log(errMsg);
+                    $('#loader').fadeOut('slow');
+               }
+          });
+     });
+     $('#save_inputs').click(function (e) {
+          e.preventDefault();
+          if (SAVE_INPUT_FLAG) {
+               $('#loader').fadeIn('fast');
+               payload = {
+                    form_data: gatherFormData(),
+                    form_status: section_status,
+                    email: userEmail,
+                    template_name: template_name
+               }
+               $.ajax({
+                    type: "POST",
+                    url: "/internal/save_inputs",
+                    data: payload,
+                    dataType: "json",
+                    success: function (data) {
+                         $('#loader').fadeOut('slow');
+                         Swal.fire({
+                              title: 'Inputs Saved',
+                              text: 'Inputs are saved successfully',
+                              icon: 'success',
+                              confirmButtonText: 'Ok'
+                         })
+                    },
+                    failure: function (errMsg) {
+                         console.log(errMsg);
+                         $('#loader').fadeOut('slow');
+                         alert("Inputs not saved");
+                    }
+               })
+          }
+     })
 }
 
 

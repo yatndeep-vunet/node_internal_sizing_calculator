@@ -200,7 +200,7 @@ var default_form_inputs = {
             "form_input": "Num of vuSmartMaps users",
             "help_text": "Total users expected to use the platform",
             "data_type": "Numeric",
-            "value": 0
+            "value": 100
         },
         {
             "form_input": "Num Alerts",
