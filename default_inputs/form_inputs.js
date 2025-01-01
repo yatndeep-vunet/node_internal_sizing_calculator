@@ -129,6 +129,25 @@ var default_form_inputs = {
             "help_text": "Should we need to store raw logs?",
             "data_type": "Boolean",
             "value": "TRUE"
+        },
+        {
+            "form_input" : "VuDataLake?",
+            "help_text" : `Setting this to ""True"" is effective only if ""Raw Logs Storage"" is set to True.If the scope is only storing raw logs (aka DataLake) with only text search on logs without much logs processing and analytics, set this to True. Less resources for pipelines will be considered in this case.
+                        Raw Logs Storage:FALSE and vuDataLake:FALSE  ---> Includes Logs Processing, Analytics, No raw logs storage
+                        Raw Logs Storage:TRUE and vuDataLake:FALSE  ---> Includes Logs Processing, Analytics and also raw logs storage
+                        Raw Logs Storage:FALSE and vuDataLake:TRUE ---> Not valid, Same as #1
+                        Raw Logs Storage:TRUE and vuDataLake:TRUE  ---> Only raw logs storage and basic text search features`,
+            "data_type" : "Boolean",
+            "value" : "FALSE"
+        },
+        {
+            "form_input": "Log Complexity",
+            "help_text": `Set the complexity of logs. How big is an average log line, even if its spanning multiple lines
+                            Simple - Syslog:200 bytes,  App Logs:1000 bytes
+                            Medium - Syslog: 500 bytes, App Logs: 2000 bytes
+                            Complex - Syslog:1000 bytes, App Logs: 5000 bytes`,
+            "data_type": "String",
+            "value": "Medium"
         }
     ],
     "vuBJM": [

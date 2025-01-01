@@ -306,15 +306,16 @@ app.post('/internal/calculate',async (req,res)=>
 async function get_over_all_result(spreadsheet_id) {
     const { sheetsService } = await authorizeClient(); // Await the authorization
     // Assuming data_coming_from_frontend.form_data is the data you want to send
-    const data = await batchGetSheetData(sheetsService, spreadsheet_id, ['Service Level Sizing!A1:F30', 'FINAL SIZING SUMMARY!A2:H18']);
+    const data = await batchGetSheetData(sheetsService,spreadsheet_id, ['Service Level Sizing!A1:F36', 'FINAL SIZING SUMMARY!A2:H20']);
     const Service_Level_Sizing = data["'Service Level Sizing'"];
     const Final_Sizing_Summary = data["'FINAL SIZING SUMMARY'"];
     const service_level_headers = Service_Level_Sizing[0];
     const service_level_rows = Service_Level_Sizing.slice(1);
     const final_sizing_header_1 = Final_Sizing_Summary[1].slice(0, 7);
-    const final_sizing_rows_1 = Final_Sizing_Summary.slice(2, 7).map((row, i) => i < 4 ? row.slice(0, -1) : row);
-    const final_sizing_header_2 = Final_Sizing_Summary[10];
-    const final_sizing_rows_2 = Final_Sizing_Summary.slice(11, 18);
+    const final_sizing_rows_1 = Final_Sizing_Summary.slice(2, 9).map(row => row);
+    const final_sizing_header_2 = Final_Sizing_Summary[11];
+    const final_sizing_rows_2 = Final_Sizing_Summary.slice(12, 21);
+    console.log(final_sizing_rows_1)
     const table_data = {
         "service_level_headers": service_level_headers,
         "service_level_rows": service_level_rows,
@@ -371,6 +372,13 @@ app.post('/internal/save_inputs', async (req, res) => {
 });
 
 
+
+app.get('/get_sheet_data', async (req, res) => {
+    const { sheetsService } = await authorizeClient(); // Await the authorization
+    // Assuming data_coming_from_frontend.form_data is the data you want to send
+    const data = await getSheetData(sheetsService, '184Ve014PEGNMsm4hTo2gaRhOXBXy1nbILBNBPosbMlM' ,'FINAL SIZING SUMMARY');
+    return res.status(200).json({ message: 'Data retrieved successfully', data: data });
+});
 
 
 app.listen(port, () => {

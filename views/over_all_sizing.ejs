@@ -39,7 +39,11 @@
                         <% page_info.table_data.final_sizing_rows_1.forEach(function(row) { %>
                             <tr>
                                 <% row.forEach(function(item, index) { %>
-                                    <td class="p-2 border <%= row[0] === 'TOTAL' ? 'font-bold' : '' %>"><%= item %></td>
+                                    <% if (row[0] === 'TOTAL' && index === row.length - 1) { %>
+                                        <td class="p-2 border font-bold" colspan="<%= row.length %>"><%= item %></td>
+                                    <% } else { %>
+                                        <td class="p-2 border <%= row[0] === 'TOTAL' ? 'font-bold' : '' %>"><%= item %></td>
+                                    <% } %>
                                 <% }); %>
                             </tr>
                         <% }); %>
@@ -61,11 +65,14 @@
                         <% page_info.table_data.final_sizing_rows_2.forEach(function(row) { %>
                             <tr>
                                 <% row.forEach(function(item, index) { %>
-                                    <td class="p-2 border <%= row[0] === 'TOTAL' ? 'font-bold' : '' %>"><%= item %></td>
+                                    <% if (row[0] === 'TOTAL' && index === row.length - 1) { %>
+                                        <td class="p-2 border font-bold" colspan="<%= row.length %>"><%= item %></td>
+                                    <% } else { %>
+                                        <td class="p-2 border <%= row[0] === 'TOTAL' ? 'font-bold' : '' %>"><%= item %></td>
+                                    <% } %>
                                 <% }); %>
                             </tr>
-                        <% }); %>
-                    </tbody>
+                        <% }); %>     </tbody>
                 </table>
             </div>     <button class="bg-blue-600 text-white px-5 py-2 rounded mx-[3%]" onclick="exportToExcel()">Export to Excel</button>
         </section>
