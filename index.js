@@ -306,23 +306,24 @@ app.post('/internal/calculate',async (req,res)=>
 async function get_over_all_result(spreadsheet_id) {
     const { sheetsService } = await authorizeClient(); // Await the authorization
     // Assuming data_coming_from_frontend.form_data is the data you want to send
-    const data = await batchGetSheetData(sheetsService,spreadsheet_id, ['Service Level Sizing!A1:F36', 'FINAL SIZING SUMMARY!A2:H20']);
+    const data = await batchGetSheetData(sheetsService,spreadsheet_id, ['Service Level Sizing!A1:F36', 'FINAL SIZING SUMMARY!A2:K20']);
     const Service_Level_Sizing = data["'Service Level Sizing'"];
     const Final_Sizing_Summary = data["'FINAL SIZING SUMMARY'"];
     const service_level_headers = Service_Level_Sizing[0];
     const service_level_rows = Service_Level_Sizing.slice(1);
     const final_sizing_header_1 = Final_Sizing_Summary[1].slice(0, 7);
-    const final_sizing_rows_1 = Final_Sizing_Summary.slice(2, 9).map(row => row);
-    const final_sizing_header_2 = Final_Sizing_Summary[11];
-    const final_sizing_rows_2 = Final_Sizing_Summary.slice(12, 21);
-    console.log(final_sizing_rows_1)
+    const final_sizing_rows_1 = Final_Sizing_Summary.slice(2, 9).map(row => row.slice(0, 7));
+    const final_sizing_header_2 = Final_Sizing_Summary[11].slice(0, 8);
+    const final_sizing_rows_2 = Final_Sizing_Summary.slice(12, 21).map(row => row.slice(0, 8));
+    const aws_cost = Final_Sizing_Summary[12][10] || 0;
     const table_data = {
         "service_level_headers": service_level_headers,
         "service_level_rows": service_level_rows,
         "final_sizing_header_1": final_sizing_header_1,
         "final_sizing_rows_1": final_sizing_rows_1,
         "final_sizing_header_2": final_sizing_header_2,
-        "final_sizing_rows_2": final_sizing_rows_2
+        "final_sizing_rows_2": final_sizing_rows_2,
+        "aws_cost": aws_cost    
     };
     const page_info = {
         "title": "vuSizing Calc",

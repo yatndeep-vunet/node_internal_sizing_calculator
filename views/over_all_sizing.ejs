@@ -1,13 +1,16 @@
 
     <!-- Tab Navigation -->
+    <div class="w-[95%] flex mx-auto justify-end py-2">
+        <button class="bg-blue-600 text-white px-5 py-2 rounded" onclick="exportToExcel()">Export to Excel</button>
+    </div>
     <div class="mx-auto w-[95%] bg-gray-700 text-white">
-        <div class="flex justify-around py-4 cursor-pointer">
-            <div id="final_sizing_tab" class="tab-title text-center text-lg font-bold py-2 px-5 bg-blue-600 rounded shadow-xl">
+        <div class="flex justify-around cursor-pointer">
+            <div id="final_sizing_tab" class="text-center text-2xl font-bold py-2 px-5 rounded">
                 Detail Sizing
             </div>
-            <div id="service_level_sizing_tab" class="tab-title text-center text-lg font-bold py-2 px-5 rounded shadow-xl">
+            <!-- <div id="service_level_sizing_tab" class="tab-title text-center text-lg font-bold py-2 px-5 rounded shadow-xl">
                 Service Level Sizing
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -27,7 +30,7 @@
 
             <!-- First Table -->
             <div id="k8s_table" class="tab-content my-4 overflow-x-auto">
-                <table class="mx-auto mb-8 w-[95%]">
+                <table class="mx-auto mb-4 w-[95%]">
                     <thead>
                         <tr>
                             <% page_info.table_data.final_sizing_header_1.forEach(function(header) { %>
@@ -52,7 +55,7 @@
             </div>
 
             <!-- Second Table -->
-            <div id="vms_table" class="tab-content my-4 hidden overflow-x-auto">
+            <div id="vms_table" class="tab-content my-2 hidden overflow-x-auto">
                 <table class="mx-auto w-[95%]">
                     <thead>
                         <tr>
@@ -74,31 +77,50 @@
                             </tr>
                         <% }); %>     </tbody>
                 </table>
-            </div>     <button class="bg-blue-600 text-white px-5 py-2 rounded mx-[3%]" onclick="exportToExcel()">Export to Excel</button>
+            </div> 
+            <div class="bg-[#485664] text-white rounded w-[95%] mx-auto flex items-center my-2">
+                <div class="flex flex-1 justify-between items-center p-5">
+                    <div>
+                        <p class="poppins-bold text-md">AWS equivalent cost to host vuSmartMaps<sup>TM</sup></p>
+                        <p class="text-2xl font-extrabold">$ <span><%= page_info.table_data.aws_cost%></span></p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-cloud text-white text-4xl"></i>
+                    </div>
+                </div>
+            </div>  
+           
+            <div class="border border-gray-200 bg-gray-600 p-2 text-white font-bold rounded cursor-pointer w-[95%] mx-auto" id='service_level_sizing_tab' onclick="toogle_service_level_sizing_table()">
+                <div class="text-center section-bars cursor-pointer relative">
+                    <p class="text-center text-2xl">Service Level Sizing</p>
+                    <i class="fa fa-caret-down text-2xl absolute right-2 top-0" id='arrow-service-level-sizing'></i>
+                </div>
+           </div>
+           <!-- Service Level Sizing -->
+            <div id="service_level_sizing_table" class="tab-content my-4 hidden overflow-x-auto">
+                <table class="mx-auto w-[95%]">
+                    <thead>
+                        <tr>
+                            <% page_info.table_data.service_level_headers.forEach(function(header) { %>
+                                <th class="bg-gray-300 shadow-2xl p-2"><%= header %></th>
+                            <% }); %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% page_info.table_data.service_level_rows.forEach(function(row) { %>
+                            <tr>
+                                <% row.forEach(function(item) { %>
+                                    <td class="p-2 border"><%= item %></td>
+                                <% }); %>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </div>
 
-    <!-- Service Level Sizing -->
-    <div id="service_level_sizing_table" class="tab-content my-4 hidden overflow-x-auto">
-        <table class="mx-auto w-[95%]">
-            <thead>
-                <tr>
-                    <% page_info.table_data.service_level_headers.forEach(function(header) { %>
-                        <th class="bg-gray-300 shadow-2xl p-2"><%= header %></th>
-                    <% }); %>
-                </tr>
-            </thead>
-            <tbody>
-                <% page_info.table_data.service_level_rows.forEach(function(row) { %>
-                    <tr>
-                        <% row.forEach(function(item) { %>
-                            <td class="p-2 border"><%= item %></td>
-                        <% }); %>
-                    </tr>
-                <% }); %>
-            </tbody>
-        </table>
-    </div>
+    
 
     <script>
         // Function to activate tabs within Final Sizing (K8S/VMs)
@@ -131,17 +153,17 @@
             main_activateTab(
                 document.getElementById('final_sizing_tab'),
                 document.getElementById('final_sizing_table'),
-                document.getElementById('service_level_sizing_table')
+                //document.getElementById('service_level_sizing_table')
             );
         });
 
-        document.getElementById('service_level_sizing_tab').addEventListener('click', () => {
-            main_activateTab(
-                document.getElementById('service_level_sizing_tab'),
-                document.getElementById('service_level_sizing_table'),
-                document.getElementById('final_sizing_table')
-            );
-        });
+        // document.getElementById('service_level_sizing_tab').addEventListener('click', () => {
+        //     main_activateTab(
+        //         document.getElementById('service_level_sizing_tab'),
+        //         document.getElementById('service_level_sizing_table'),
+        //         document.getElementById('final_sizing_table')
+        //     );
+        // });
 
         // Export to Excel
         function exportToExcel() {
@@ -168,5 +190,19 @@
             XLSX.utils.book_append_sheet(workbook, serviceLevelSizingSheet, 'Service Level Sizing');
 
             XLSX.writeFile(workbook, 'sizing_data.xlsx');
+        }
+        function toogle_service_level_sizing_table(){
+            const service_level_sizing_table = document.getElementById('service_level_sizing_table');
+            const arrow_service_level_sizing = document.getElementById('arrow-service-level-sizing');
+            if(service_level_sizing_table.classList.contains('hidden')){
+                service_level_sizing_table.classList.remove('hidden');
+                arrow_service_level_sizing.classList.remove('fa-caret-down');
+                arrow_service_level_sizing.classList.add('fa-caret-up');
+            }
+            else{
+                service_level_sizing_table.classList.add('hidden');
+                arrow_service_level_sizing.classList.remove('fa-caret-up');
+                arrow_service_level_sizing.classList.add('fa-caret-down');
+            }
         }
     </script>
