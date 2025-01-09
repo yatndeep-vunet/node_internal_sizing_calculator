@@ -285,6 +285,7 @@ app.post('/internal/calculate',async (req,res)=>
                 return res.status(400).json({ message: 'User not found' }); 
          }
          const spreadsheet_id = user_data.spreadsheet_id
+         
          if (!spreadsheet_id) {
                 console.log('Spreadsheet not found');
                 return res.status(400).json({ message: 'Spreadsheet not found' });
@@ -307,7 +308,7 @@ async function get_over_all_result(spreadsheet_id) {
     const { sheetsService } = await authorizeClient(); // Await the authorization
     // Assuming data_coming_from_frontend.form_data is the data you want to send
     
-    const data = await batchGetSheetData(sheetsService,'15Zr-YE2_W7s0RcMI9KkDWIUXE0hmzJ47cuJzS9i0YYs', ['Service Level Sizing!A1:F36', 'FINAL SIZING SUMMARY!A2:K29']);
+    const data = await batchGetSheetData(sheetsService,spreadsheet_id, ['Service Level Sizing!A1:F36', 'FINAL SIZING SUMMARY!A2:K29']);
     const Service_Level_Sizing = data["'Service Level Sizing'"];
     const Final_Sizing_Summary = data["'FINAL SIZING SUMMARY'"];
     const service_level_headers = Service_Level_Sizing[0];
@@ -320,6 +321,7 @@ async function get_over_all_result(spreadsheet_id) {
     const is_mini = Final_Sizing_Summary[21][1]
     const is_mini_table_header = Final_Sizing_Summary[23].slice(0, 7);
     const is_mini_table_rows = Final_Sizing_Summary.slice(24, 29).map(row => row.slice(0, 7));
+
     const table_data = {
         "service_level_headers": service_level_headers,
         "service_level_rows": service_level_rows,

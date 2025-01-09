@@ -153,9 +153,7 @@
 
     <script>
         // Function to activate tabs within Final Sizing (K8S/VMs)
-        const is_mini = '<%= page_info.table_data.is_mini %>';
-
-        if(is_mini === 'true'){
+        if('<%= page_info.table_data.is_mini %>' === 'true'){
            document.getElementById('mini_sizing_tab').classList.remove('hidden');
         }
         else{
@@ -226,7 +224,7 @@
 
             // Mini Sizing Table
 
-            if(is_mini === 'true'){
+            if('<%= page_info.table_data.is_mini %>' === 'true'){
                 const miniSizingTable = document.getElementById('mini_sizing_table');
                 const miniSizingSheet = XLSX.utils.table_to_sheet(miniSizingTable);
                 XLSX.utils.book_append_sheet(workbook, miniSizingSheet, 'Mini Sizing');
