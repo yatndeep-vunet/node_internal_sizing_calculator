@@ -306,7 +306,8 @@ app.post('/internal/calculate',async (req,res)=>
 async function get_over_all_result(spreadsheet_id) {
     const { sheetsService } = await authorizeClient(); // Await the authorization
     // Assuming data_coming_from_frontend.form_data is the data you want to send
-    const data = await batchGetSheetData(sheetsService,spreadsheet_id, ['Service Level Sizing!A1:F36', 'FINAL SIZING SUMMARY!A2:K20']);
+    
+    const data = await batchGetSheetData(sheetsService,'15Zr-YE2_W7s0RcMI9KkDWIUXE0hmzJ47cuJzS9i0YYs', ['Service Level Sizing!A1:F36', 'FINAL SIZING SUMMARY!A2:K29']);
     const Service_Level_Sizing = data["'Service Level Sizing'"];
     const Final_Sizing_Summary = data["'FINAL SIZING SUMMARY'"];
     const service_level_headers = Service_Level_Sizing[0];
@@ -315,7 +316,10 @@ async function get_over_all_result(spreadsheet_id) {
     const final_sizing_rows_1 = Final_Sizing_Summary.slice(2, 9).map(row => row.slice(0, 7));
     const final_sizing_header_2 = Final_Sizing_Summary[11].slice(0, 8);
     const final_sizing_rows_2 = Final_Sizing_Summary.slice(12, 21).map(row => row.slice(0, 8));
-    const aws_cost = Final_Sizing_Summary[12][10] || 0;
+    const aws_cost = Final_Sizing_Summary[12][10] || 0;  // Assuming the AWS cost is in cell K14
+    const is_mini = Final_Sizing_Summary[21][1]
+    const is_mini_table_header = Final_Sizing_Summary[23].slice(0, 7);
+    const is_mini_table_rows = Final_Sizing_Summary.slice(24, 29).map(row => row.slice(0, 7));
     const table_data = {
         "service_level_headers": service_level_headers,
         "service_level_rows": service_level_rows,
@@ -323,7 +327,10 @@ async function get_over_all_result(spreadsheet_id) {
         "final_sizing_rows_1": final_sizing_rows_1,
         "final_sizing_header_2": final_sizing_header_2,
         "final_sizing_rows_2": final_sizing_rows_2,
-        "aws_cost": aws_cost    
+        "aws_cost": aws_cost ,
+        "is_mini": is_mini,
+        "mini_table_headers": is_mini_table_header,
+        "mini_table_rows": is_mini_table_rows
     };
     const page_info = {
         "title": "vuSizing Calc",
@@ -377,7 +384,7 @@ app.post('/internal/save_inputs', async (req, res) => {
 app.get('/get_sheet_data', async (req, res) => {
     const { sheetsService } = await authorizeClient(); // Await the authorization
     // Assuming data_coming_from_frontend.form_data is the data you want to send
-    const data = await getSheetData(sheetsService, '184Ve014PEGNMsm4hTo2gaRhOXBXy1nbILBNBPosbMlM' ,'FINAL SIZING SUMMARY');
+    const data = await getSheetData(sheetsService, '15Zr-YE2_W7s0RcMI9KkDWIUXE0hmzJ47cuJzS9i0YYs' ,'FINAL SIZING SUMMARY');
     return res.status(200).json({ message: 'Data retrieved successfully', data: data });
 });
 

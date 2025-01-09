@@ -19,11 +19,14 @@
         <section>
             <div class="mx-auto w-[95%] bg-gray-700 text-white">
                 <div class="flex justify-around py-4 cursor-pointer">
-                    <div id="k8s_tab" class="tab-title text-center text-lg font-bold py-2 px-5 bg-blue-600 rounded shadow-xl" onclick="activateTab('k8s_tab', 'k8s_table', 'vms_table')">
+                    <div id="k8s_tab" class="tab-title text-center text-lg font-bold py-2 px-5 bg-blue-600 rounded shadow-xl border" onclick="activateTab('k8s_tab', 'k8s_table', 'vms_table' , 'mini_sizing_table')">
                         Sizing on a Managed K8S Environment
                     </div>
-                    <div id="vms_tab" class="tab-title text-center text-lg font-bold py-2 px-5 rounded shadow-xl" onclick="activateTab('vms_tab', 'vms_table', 'k8s_table')">
+                    <div id="vms_tab" class="tab-title text-center text-lg font-bold py-2 px-5 rounded shadow-xl border" onclick="activateTab('vms_tab', 'vms_table', 'k8s_table' , 'mini_sizing_table')">
                         Sizing on VMs
+                    </div>
+                    <div id="mini_sizing_tab" class="tab-title hidden text-center text-lg font-bold py-2 px-5 rounded shadow-xl border" onclick="activateTab('mini_sizing_tab', 'mini_sizing_table', 'vms_table' ,'k8s_table')">
+                        Mini Sizing
                     </div>
                 </div>
             </div>
@@ -53,7 +56,31 @@
                     </tbody>
                 </table>
             </div>
-
+            <!-- Mini Sizing Table -->
+            <div id="mini_sizing_table" class="tab-content my-4 overflow-x-auto hidden">
+                <table class="mx-auto w-[95%]">
+                    <thead>
+                        <tr>
+                            <% page_info.table_data.mini_table_headers.forEach(function(header) { %>
+                                <th class="bg-gray-300 shadow-2xl p-2"><%= header %></th>
+                            <% }); %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% page_info.table_data.mini_table_rows.forEach(function(row) { %>
+                            <tr>
+                                <% row.forEach(function(item, index) { %>
+                                    <% if (row[0] === 'TOTAL' && index === row.length - 1) { %>
+                                        <td class="p-2 border font-bold" colspan="<%= row.length %>"><%= item %></td>
+                                    <% } else { %>
+                                        <td class="p-2 border <%= row[0] === 'TOTAL' ? 'font-bold' : '' %>"><%= item %></td>
+                                    <% } %>
+                                <% }); %>
+                            </tr>
+                        <% }); %>     
+                    </tbody>
+                </table>
+            </div>
             <!-- Second Table -->
             <div id="vms_table" class="tab-content my-2 hidden overflow-x-auto">
                 <table class="mx-auto w-[95%]">
@@ -75,7 +102,8 @@
                                     <% } %>
                                 <% }); %>
                             </tr>
-                        <% }); %>     </tbody>
+                        <% }); %>     
+                    </tbody>
                 </table>
             </div> 
             <div class="bg-[#485664] text-white rounded w-[95%] mx-auto flex items-center my-2">
@@ -117,6 +145,7 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Service Level Sizing -->
         </section>
     </div>
 
@@ -124,11 +153,21 @@
 
     <script>
         // Function to activate tabs within Final Sizing (K8S/VMs)
-        function activateTab(activeTabId, contentToShowId, contentToHideId) {
+        const is_mini = '<%= page_info.table_data.is_mini %>';
+
+        if(is_mini === 'true'){
+           document.getElementById('mini_sizing_tab').classList.remove('hidden');
+        }
+        else{
+            document.getElementById('mini_sizing_tab').classList.add('hidden');
+        }
+
+        function activateTab(activeTabId, contentToShowId, contentToHideId1 , contentToHideId2) {
             // Get elements
             const activeTab = document.getElementById(activeTabId);
             const contentToShow = document.getElementById(contentToShowId);
-            const contentToHide = document.getElementById(contentToHideId);
+            const contentToHide1 = document.getElementById(contentToHideId1);
+            const contentToHide2 = document.getElementById(contentToHideId2);
 
             // Highlight the active tab
             document.querySelectorAll('.tab-title').forEach(tab => tab.classList.remove('bg-blue-600'));
@@ -136,7 +175,8 @@
 
             // Toggle visibility of content
             contentToShow.classList.remove('hidden');
-            contentToHide.classList.add('hidden');
+            contentToHide1.classList.add('hidden');
+            contentToHide2.classList.add('hidden');
         }
 
         // Function to activate main tabs
@@ -179,17 +219,25 @@
             const vmsSheet = XLSX.utils.table_to_sheet(vmsTable);
             XLSX.utils.book_append_sheet(workbook, vmsSheet, 'Sizing on VMs');
 
-            // User Inputs 
-            const userInputs = document.getElementById('user_inputs');
-            const userInputsSheet = XLSX.utils.table_to_sheet(userInputs);
-            XLSX.utils.book_append_sheet(workbook, userInputsSheet, 'User Inputs');
-
             // Service Level Sizing 
             const serviceLevelSizingTable = document.getElementById('service_level_sizing_table');
             const serviceLevelSizingSheet = XLSX.utils.table_to_sheet(serviceLevelSizingTable);
             XLSX.utils.book_append_sheet(workbook, serviceLevelSizingSheet, 'Service Level Sizing');
 
+            // Mini Sizing Table
+
+            if(is_mini === 'true'){
+                const miniSizingTable = document.getElementById('mini_sizing_table');
+                const miniSizingSheet = XLSX.utils.table_to_sheet(miniSizingTable);
+                XLSX.utils.book_append_sheet(workbook, miniSizingSheet, 'Mini Sizing');
+            }
+
+            // User Inputs 
+            const userInputs = document.getElementById('user_inputs');
+            const userInputsSheet = XLSX.utils.table_to_sheet(userInputs);
+            XLSX.utils.book_append_sheet(workbook, userInputsSheet, 'User Inputs');
             XLSX.writeFile(workbook, 'sizing_data.xlsx');
+
         }
         function toogle_service_level_sizing_table(){
             const service_level_sizing_table = document.getElementById('service_level_sizing_table');
